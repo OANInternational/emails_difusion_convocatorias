@@ -1,0 +1,109 @@
+function EnviarEmail() {
+    
+  var hojaCalculo = SpreadsheetApp.openById("14IsE7nnEh3YTGF901uUy4eJxLs98wTrLhwZUTUbmDvw");
+  var hojaEmail = hojaCalculo.getSheetByName('ListaCorreos');
+  var hojaMensaje = hojaCalculo.getSheetByName('Mensaje');
+  
+  var ultimaFila = hojaEmail.getLastRow();
+  var ultimaColumna = hojaEmail.getLastColumn();
+  var ultimaFila1 = hojaMensaje.getLastRow();
+  
+  var nombre = [];
+  var email = [];
+  var enviarinfo = [];
+  var cuerpocorreo=[];
+  var cuerpototalcorreo=[];
+  cuerpototalcorreo[0,0]="";
+  
+   for(var i=0; i < ultimaFila-1; i++) { 
+     nombre[i]=String(hojaEmail.getSheetValues(i+2, 1, 1, 1));
+     email[i]=String(hojaEmail.getSheetValues(i+2, 3, 1, 1));
+     for(var j=0; j<ultimaColumna-3; j++){
+       enviarinfo[i,j]=Number(hojaEmail.getSheetValues(i+2, j+4, 1, 1));
+       if (enviarinfo[i,j]==1){
+         cuerpocorreo[i,j]=hojaMensaje.getSheetValues(j+3,2,1,1);
+         cuerpototalcorreo[i]=cuerpototalcorreo[i]+cuerpocorreo[i,j];
+       }
+       else{
+      cuerpocorreo[i,j]=null;
+       }
+     }
+     
+   }
+  
+ var subject=String(hojaMensaje.getSheetValues(2, 2, 1, 1));
+
+
+  
+  
+  for (var i=0; i < ultimaFila-1;i++){
+  
+    MailApp.sendEmail({
+    to: email[i],
+    subject: subject,
+    htmlBody: "Hola "+String(nombre[i])+cuerpototalcorreo[i]
+      
+    });
+}
+}
+
+function EnviarEmailPrueba() {
+    
+  var hojaCalculo = SpreadsheetApp.openById("14IsE7nnEh3YTGF901uUy4eJxLs98wTrLhwZUTUbmDvw");
+  var hojaEmail = hojaCalculo.getSheetByName('Prueba');
+  var hojaMensaje = hojaCalculo.getSheetByName('Mensaje');
+  
+  var ultimaFila = hojaEmail.getLastRow();
+  var ultimaColumna = hojaEmail.getLastColumn();
+  var ultimaFila1 = hojaMensaje.getLastRow();
+  
+  var nombre = [];
+  var email = [];
+  var enviarinfo = [];
+  var cuerpocorreo=[];
+  var cuerpototalcorreo=[];
+  cuerpototalcorreo[0,0]="";
+  
+   for(var i=0; i < ultimaFila-1; i++) { 
+     nombre[i]=String(hojaEmail.getSheetValues(i+2, 1, 1, 1));
+     email[i]=String(hojaEmail.getSheetValues(i+2, 3, 1, 1));
+     for(var j=0; j<ultimaColumna-3; j++){
+       enviarinfo[i,j]=Number(hojaEmail.getSheetValues(i+2, j+4, 1, 1));
+       if (enviarinfo[i,j]==1){
+         cuerpocorreo[i,j]=hojaMensaje.getSheetValues(j+3,2,1,1);
+         cuerpototalcorreo[i]=cuerpototalcorreo[i]+cuerpocorreo[i,j];
+       }
+       else{
+      cuerpocorreo[i,j]=null;
+       }
+     }
+     
+   }
+  
+ var subject=String(hojaMensaje.getSheetValues(2, 2, 1, 1));
+
+
+  
+  
+  for (var i=0; i < ultimaFila-1;i++){
+  
+    MailApp.sendEmail({
+    to: email[i],
+    subject: subject,
+    htmlBody: "Hola "+String(nombre[i])+cuerpototalcorreo[i]
+      
+    });
+}
+}
+function onOpen(){
+var spreadsheet = SpreadsheetApp.getActive();
+var menuItems = [
+{name: 'Prueba Emails', functionName: 'EnviarEmailPrueba'}
+];
+spreadsheet.addMenu('Prueba Emails', menuItems);
+var menuItems = [ 
+{name: 'Enviar Emails', functionName: 'EnviarEmail'}
+];
+spreadsheet.addMenu('Enviar Emails', menuItems);
+  
+}
